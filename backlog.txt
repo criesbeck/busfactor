@@ -1,0 +1,6 @@
+let reviewer see what degrees from each school
+show gpa for school
+replace degree codes like X08 with something normal
+ignore non-degree schools (x06, x07)
+
+use xls files to specify school ranking
