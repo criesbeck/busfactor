@@ -266,8 +266,21 @@ function analyzeRow(row) {
   });
   row.Pro = pro.join(', ');
   row.Con = con.join(', ');
-  row.Score = keys.reduce((sum, key) => sum + row[key], 0);
+  row.Score = integerScore(keys.reduce((sum, key) => sum + weightedScore(row, key), 0));
   return row;
+}
+
+function integerScore(score) {
+  return Math.round(score * 100);
+}
+
+function weightedScore(row, key) {
+  return row[key] * getWeight(key);
+}
+
+function getWeight(key) {
+  const weight = options.weights[key];
+  return weight === undefined ? options.weightDefault : weight;
 }
 
 function addPdfLink(row) {
@@ -282,7 +295,8 @@ function loadSettings(evt) {
   readFile(evt, readConfigurations, { 
     Schools: { call: loadSchools, type: 'array' },
     Filters: { call: loadFilters, type: 'array' },
-    Majors: { call: loadMajors, type: 'array' }
+    Majors: { call: loadMajors, type: 'array' },
+    Weights: { call: loadWeights, type: 'array' }
   });
   return false;
 }
@@ -303,16 +317,26 @@ function loadMajors(data) {
   options.majorScores = majorScores;
 }
 
+function loadWeights(data) {
+  const weightArray = removeEmptyData(data)
+  const weightSum = weightArray.reduce((sum, row) => sum + (+ row[1]), 0);
+  const weights = weightsToJson(weightArray, weightSum);
+  options.weights = weights;
+  options.weightDefault = 1 / weightSum;
+}
+
+function weightsToJson(lst, sum) {
+  const obj = {};
+  lst.forEach((row) => { obj[row[0]] = row[1] / sum; });
+  return obj;
+}
+
 function removeEmptyData(data) {
   return data.map(row => row.filter(cell => cell && cell.length > 0)).filter(row => row.length > 0);
 }
 
 function lowerCaseScoreRow(row) {
   return [+ row[0]].concat(row.slice(1).map(cell => cell.toLowerCase()));
-}
-
-function initOptions(options) {
-  Object.assign(window.options, options);
 }
 
 document.getElementById('ms-file')
