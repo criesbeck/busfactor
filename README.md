@@ -1,4 +1,6 @@
-A simple browser-based application of SheetJS and Vue to display Excel data in an HTML template.
+A simple browser-based application of 
+[SheetJS](https://sheetjs.com/) and 
+[VueJS](https://vuejs.org/) to flexibly display Excel data in HTML.
 
 Being browser-based, the user has to specify the input Excel file. 
 
