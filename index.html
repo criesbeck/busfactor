@@ -1,36 +1,33 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Application Reviewer</title>
+    <title>XLS-Vue Example</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" 
       rel="stylesheet">
   </head>
   <body>
-    <div class="container" id="app">      
-      <label>Select a downloaded CollegeNet file: <input type="file" id="ms-file"></label>
-      <label>(Optional) Select a settings file: <input type="file" id="options-file"></label>
-      <table class="table" v-if="headers.length > 0">
-        <tr>
-          <th></th><th v-for="header in headers">{{ header }}</th>
-        </tr>
-        <tr v-for="(row, index) in rows">
-          <td>{{ index + 1 }}</td> 
-          <td v-for="value in row">
-            <template v-if="value && value.startsWith && value.startsWith('<a ')">
-              <span v-html="value"></span>
-            </template>
-            <template v-else>
-              {{ value }}
-            </template>
-          </td>
-        </tr>
-      </table>
+    <div>
+      <input type="file" id="file-source">
+    </div>
+    <div class="container" id="xls-view">
+      <ul v-for="speaker in speakers">
+        <li>
+          <img v-bind:src="speaker.image">
+          <a v-bind:href="speaker.url">
+            {{speaker.name}}
+          </a><br>
+          {{speaker.title}}
+        </li>
+      </ul>
     </div>
     
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.11.17/xlsx.full.min.js"></script>
-    <script src="./app-reviewer.js"></script>
+    <script src="./xls-vue.js"></script>
+    <script type="text/javascript">
+      initXlsVue({ target: 'xls-view', fileSource: 'file-source' });
+    </script>
   </body>
 </html>
