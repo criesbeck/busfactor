@@ -1,10 +1,18 @@
 'use strict';
 
 // loads the application spreadsheet
-function displayData(e, app, postProcess) {
-  const workbook = XLSX.read(e.target.result, { type: 'binary' });
+function getData(evt) {
+  const workbook = XLSX.read(evt.target.result, { type: 'binary' });
+  const data = {};
   workbook.SheetNames.forEach((name) => {
-    Vue.set(app, name, postProcess(XLSX.utils.sheet_to_json(workbook.Sheets[name]), name));
+    data[name] = XLSX.utils.sheet_to_json(workbook.Sheets[name]);
+  });
+  return data;
+}
+
+function setData(app, data) {
+  Object.keys(data).forEach((key) => {
+    Vue.set(app, key, data[key]);
   });
 }
 
@@ -15,7 +23,7 @@ function displayData(e, app, postProcess) {
 
 function handleFileSelect(evt, app, postProcess) {
   const reader = new FileReader();
-  reader.onload = (evt) => { displayData(evt, app, postProcess); };
+  reader.onload = (evt) => { setData(app, postProcess(getData(evt))); };
   reader.readAsBinaryString(evt.target.files[0]);
 }
 

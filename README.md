@@ -50,5 +50,7 @@ set the Vue data field to
 ```
 
 An optional third argument can be passed to **initXlsVue()** to process the worksheet data
-before storing in the Vue object. The argument should be a function of a list of items and 
-the name of the worksheet. It should return a list of items.
+before storing in the Vue object. The argument will be passed the parsed spreadsheet
+data object, and should return the data to store in the Vue object. Each top-level
+key is set with **Vue.set()** to trigger 
+[change detection](https://vuejs.org/v2/guide/list.html#Object-Change-Detection-Caveats).
