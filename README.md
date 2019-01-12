@@ -2,6 +2,8 @@ A simple browser-based application of SheetJS and Vue to display Excel data in a
 
 Being browser-based, the user has to specify the input Excel file. 
 
+See **index.html** for an simple example.
+
 To use in an HTML file with the Vue templating, include 
 the necessary JavaScript (SheetJS, Vue, and xls-vue), and call **initXlsVue()** with
 the Vue app object and the ID of input file element, e.g.,
