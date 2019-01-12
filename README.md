@@ -5,7 +5,7 @@ A simple browser-based application of
 See **index.html** for an simple example. No server needs to be run. No
 code needs to be installed other than this code.
 
-Being browser-based, the user has to specify the input Excel file. 
+Being browser-based, user interaction is needed to specify the input Excel file. 
 
 To use in an HTML file with Vue templating, include 
 the necessary JavaScript (SheetJS, Vue, and xls-vue), create
