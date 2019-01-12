@@ -9,3 +9,6 @@ Icon
 
 # Thumbnails
 ._*
+
+# Excel backup files
+~$*
