@@ -1,13 +1,11 @@
 'use strict';
 
 // loads the application spreadsheet
-function displayData(e, target) {
+function displayData(e, app, postProcess) {
   const workbook = XLSX.read(e.target.result, { type: 'binary' });
-  const data = {};
   workbook.SheetNames.forEach((name) => {
-    data[name] = XLSX.utils.sheet_to_json(workbook.Sheets[name]);
-  })
-  new Vue({ el: `#${target}`, data });
+    Vue.set(app, name, postProcess(XLSX.utils.sheet_to_json(workbook.Sheets[name]), name));
+  });
 }
 
 // read xlsx file use SheetJS -- http://sheetjs.com/
@@ -15,13 +13,15 @@ function displayData(e, target) {
 // passes data to fn
 // if json, make JSON object, else make 2D array
 
-function handleFileSelect(evt, target) {
+function handleFileSelect(evt, app, postProcess) {
   const reader = new FileReader();
-  reader.onload = (evt) => { displayData(evt, target); };
+  reader.onload = (evt) => { displayData(evt, app, postProcess); };
   reader.readAsBinaryString(evt.target.files[0]);
 }
 
-function initXlsVue({ fileSource, target }) {
+function initXlsVue(app, fileSource, postProcess = x => x) {
   document.getElementById(fileSource)
-    .addEventListener('change', evt => handleFileSelect(evt, target), false);
+    .addEventListener('change', (evt) => {
+      handleFileSelect(evt, app, postProcess);
+    });
 }

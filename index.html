@@ -12,13 +12,13 @@
       <input type="file" id="file-source">
     </div>
     <div class="container" id="xls-view">
-      <ul v-for="speaker in speakers">
-        <li>
-          <img v-bind:src="speaker.image">
-          <a v-bind:href="speaker.url">
-            {{speaker.name}}
+      <ul>
+        <li v-for="speaker in Speakers">
+          <img v-bind:src="speaker.Image">
+          <a v-bind:href="speaker.Url" target="_blank">
+            {{speaker.Name}}
           </a><br>
-          {{speaker.title}}
+          {{speaker.Title}}
         </li>
       </ul>
     </div>
@@ -27,7 +27,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.11.17/xlsx.full.min.js"></script>
     <script src="./xls-vue.js"></script>
     <script type="text/javascript">
-      initXlsVue({ target: 'xls-view', fileSource: 'file-source' });
+      const app = new Vue({
+        el: '#xls-view', data: { Speakers: [] }
+      });
+      initXlsVue(app, 'file-source');
     </script>
   </body>
 </html>
