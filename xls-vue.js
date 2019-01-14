@@ -1,8 +1,8 @@
 'use strict';
 
 // loads the application spreadsheet
-function getData(evt) {
-  const workbook = XLSX.read(evt.target.result, { type: 'binary' });
+function getData(rawData, type) {
+  const workbook = XLSX.read(rawData, { type });
   const data = {};
   workbook.SheetNames.forEach((name) => {
     data[name] = XLSX.utils.sheet_to_json(workbook.Sheets[name]);
@@ -21,15 +21,17 @@ function setData(app, data) {
 // passes data to fn
 // if json, make JSON object, else make 2D array
 
-function handleFileSelect(evt, app, postProcess) {
-  const reader = new FileReader();
-  reader.onload = (evt) => { setData(app, postProcess(getData(evt))); };
-  reader.readAsBinaryString(evt.target.files[0]);
+async function viewRemoteXls(app, url, postProcess = x => x) {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(response.statusText);
+  const buf = await response.arrayBuffer();
+  setData(app, postProcess(getData(new Uint8Array(buf), 'array')));
 }
 
-function initXlsVue(app, fileSource, postProcess = x => x) {
-  document.getElementById(fileSource)
-    .addEventListener('change', (evt) => {
-      handleFileSelect(evt, app, postProcess);
-    });
+function viewLocalXls(evt, app, postProcess = x => x) {
+  const reader = new FileReader();
+  reader.onload = (evt) => { 
+    setData(app, postProcess(getData(evt.target.result, 'binary')));
+  };
+  reader.readAsBinaryString(evt.target.files[0]);
 }

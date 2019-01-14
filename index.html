@@ -13,12 +13,12 @@
     </div>
     <div class="container" id="xls-view">
       <ul>
-        <li v-for="speaker in Speakers">
-          <img v-bind:src="speaker.Image">
-          <a v-bind:href="speaker.Url" target="_blank">
-            {{speaker.Name}}
+        <li v-for="poet in poets">
+          <img v-bind:src="poet.Image">
+          <a v-bind:href="poet.Url" target="_blank">
+            {{poet.Name}}
           </a><br>
-          {{speaker.Title}}
+          {{poet.Title}}
         </li>
       </ul>
     </div>
@@ -28,9 +28,17 @@
     <script src="./xls-vue.js"></script>
     <script type="text/javascript">
       const app = new Vue({
-        el: '#xls-view', data: { Speakers: [] }
+        el: '#xls-view', data: { poets: [] }
       });
-      initXlsVue(app, 'file-source');
+
+      // display an xls file selected by the user
+      document.getElementById('file-source')
+        .addEventListener('change', (evt) => {
+          viewLocalXls(evt, app);
+        });
+      
+      // display the xls file on the server
+      viewRemoteXls(app, './poets.xlsx');
     </script>
   </body>
 </html>
