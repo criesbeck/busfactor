@@ -10,15 +10,12 @@
   <body>
     <div class="container" id="app">
       <div class="upload-box">
+        <p>
+          Upload the git log for your main branch, e.g., upload <code>~/gitlog.txt</code> after doing
+        </p>
+        <pre><code>git log --no-merges --name-status main > ~/gitlog.txt</code></pre>
         <div class="mb-3">
-          <label for="logGile" class="form-label">Gitlog File</label>
           <input class="form-control" type="file" id="logFile" @change="loadFile">
-        </div>
-        <div v-if="data.files.length === 0">
-          <p>
-            Upload the git log for your main branch, e.g., upload <code>~/gitlog.txt</code> after doing
-          </p>
-          <pre><code>git log --no-merges --name-status main > ~/gitlog.txt</code></pre>
         </div>
       </div>
       <h2>Bus Factor Analysis</h2>
