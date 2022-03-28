@@ -10,5 +10,5 @@ Icon
 # Thumbnails
 ._*
 
-# Excel backup files
-~$*
+# test log
+gitlog.txt

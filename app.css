@@ -1,0 +1,6 @@
+small { display: block; }
+.code-block { height: 20em; margin: 1em; overflow: scroll; white-space: pre; }
+table td.risky { background-color: lightpink; }
+.upload-box { border: 1px solid blue; padding: 1em; }
+.upload-box input { margin-bottom: 0.5em;}
+.upload-box pre { margin-left: 2em; }
