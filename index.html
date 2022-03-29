@@ -26,7 +26,7 @@
         </thead>
         <tbody>
           <tr v-for="entry in data.files">
-            <td :class="{ risky: entry.contributors < 3 }">
+            <td :class="{ risky: entry.actives < 3 }">
               <small>{{pathPart(entry.file)}}</small>
               <div>{{filePart(entry.file)}}</div>
               <small>
@@ -34,7 +34,7 @@
                 {{entryLastEdit(entry)}}
               </small>
             </td>
-            <td v-for="author in data.authors" :class="{ risky: authorContribution(entry, author) < 3 }">
+            <td v-for="author in data.authors" :class="{ low: !isActiveContributor(entry, author) }">
               <div>{{authorContribution(entry, author)}}%</div>
               <small>Edits: {{entry.authors[author].edits.length}}</small>
               <small> {{shortDate(entry.authors[author].edits[0])}}</small>
@@ -91,8 +91,11 @@
           authorLastEdit(file, author) {
             return this.shortDate(this.data.history[file].authors[author].edits[0]);
           },
-          authorContribution(entry, author) {
-            return Math.ceil(entry.authors[author].frecency/entry.frecency*100);
+          authorContribution(fileEntry, author) {
+            return Math.ceil(fileEntry.authors[author].frecency/fileEntry.frecency*100);
+          },
+          isActiveContributor(fileEntry, author) {
+            return isActiveContributor(fileEntry.frecency, fileEntry.authors[author]);
           }
         }
       })

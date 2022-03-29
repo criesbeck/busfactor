@@ -1,52 +1,36 @@
-A simple application of 
-[SheetJS](https://sheetjs.com/) and 
-[VueJS](https://vuejs.org/) to display Excel data in HTML. The data can be in
-a file on the server or a user-selected local file.
+This is a web tool to identify potential bus factor issues for small
+cross-functional teams with 5 to 10 members. It uses the output of
+**git log** run on a local repository.
 
-If *app* is a Vue component, and *file.xlsx* is an Excel file on the 
-server, then 
+# Usage
 
-```
-viewRemoteXls(app, './file.xlsx');
-```
-
-returns a promise that sets the data in *app* to the parsed data in
-*file.xlsx*. 
-
-To use the data in a local user-selected file, call **viewLocalXls** in
-the event handler for a file input element
+Run **git log** as follows. Put the output file some place easy to find
+but probably not in your repository.
 
 ```
-document.getElementById('file-source')
-  .addEventListener('change', (evt) => {
-    viewLocalXls(evt, app);
-  });
+git log --no-merges --name-status main > ~/gitlog.txt
 ```
 
-See **index.html** for a simple example.
+Upload the file to https://criesbeck.github.io/busfactor/ or serve **index.html** locally
+and use that. Nothing is stored on any server.
 
-The spreadsheet may have multiple worksheets. Each sheet should have column
-headers. Each sheet name become a top-level key in the parsed data, and the value
-of each key become an array of objects, where the column headers are the keys to the data. 
-See 
-[XLSX.utils.sheet_to_json()](https://docs.sheetjs.com/#json) for details.
+After uploading, the app displays a table with a row for each code file. Code
+file here means a JavaScript, CSS, HTML, or YAML file. The most active files are listed first.
+Activity is calculated based on the number and recency of edits. 
 
-For example, with the above example, operating on the sample file **poets.xlsx** will
-set the Vue object data field to 
+The columns of the table list the developers who have contributed to the repository. The cells
+show what percentage each developer contributed to the activity on each file.
 
-```
-{
-  "poets": [
-    { "Name": ..., "Image": ..., "Url": ..., "Title": ... },
-    { "Name": ..., "Image": ..., "Url": ..., "Title": ... },
-    ...
-  ]
-}
-```
+Developers who have contributed less than 5% to a file are highlighted. 
+These developers should be first in line for future work on those files.
 
-If you need to process the spreadsheet data before displaying, pass a function
-as the third argument to the view function, to
-take the parsed spreadsheet and return the data you want used.
+Files with only one or two contributors over 5% are bus factor risks and are highlighted. 
+Future work on that file should include other team members. 
 
-Note: **Vue.set()** is called on each sheet name to trigger 
-[change detection](https://vuejs.org/v2/guide/list.html#Object-Change-Detection-Caveats).
+# Customization
+
+Clone this repository. 
+
+To change what files are tracked, edit the regular expressions in  **EDIT_PAT**.
+
+To change the threshold for being an active contributor, change **THRESHOLD**.

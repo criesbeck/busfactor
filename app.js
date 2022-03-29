@@ -1,5 +1,14 @@
 'use strict';
 
+// Which files and actions to track
+// This says to only track Add, Change, Modify to JavaScript, HTML, CSS, and YAML files
+const EDIT_PAT = /^[ACM]\s+(.*[.](?:js|jsx|ts|tsx|css|html?|yml))$/;
+
+// What threshold for being an active contributor. Range: 0 to 1.
+// This says 5%
+const THRESHOLD = 0.05;
+
+
 const count = (lst, fn) => (
   lst.reduce((n, x) => fn(x) ? n + 1 : n, 0)
 );
@@ -22,9 +31,6 @@ const DATE_PAT = /^Date:\s+(.+)$/;
 const isDateLine = (line) => DATE_PAT.test(line);
 const getDate = (line) => DATE_PAT.exec(line)[1];
 
-const EDIT_PAT = /^[ACM]\s+(.*[.](?:js|jsx|ts|tsx|css|html|yml))/;
-
-// only track Add, Change, Modify to JavaScript, HTML, CSS, and YAML files
 const isCodeFileLine =(line) => EDIT_PAT.test(line);
 const getFile = (line) => EDIT_PAT.exec(line)[1];
 
@@ -41,22 +47,25 @@ const fileFrecency = (editHistory) => (
   Object.keys(editHistory).reduce((sum, author) => sum + editHistory[author].frecency, 0)
 );
 
-const countContributors = (frecency, editHistory) => {
-  const threshold = .03; // at least 3% relative frecency to be a serious contributor
-  return count(Object.values(editHistory), entry => entry.frecency/frecency >= threshold);
+const isActiveContributor = (fileFrecency, authorEntry) => (
+  authorEntry.frecency / fileFrecency >= THRESHOLD
+);
+
+const countActiveContributors = (frecency, editHistory) => {
+  return count(Object.values(editHistory), entry => isActiveContributor(frecency, entry));
 };
 
 // add aggregate data:
 //  - total edits, last edit, total frecency, number of serious contributors
 const makeFileEntry = (file, editHistory) => {
   const frecency = fileFrecency(editHistory);
-  const contributors = countContributors(frecency, editHistory);
-  return { file, frecency, contributors, authors: editHistory };
+  const actives = countActiveContributors(frecency, editHistory);
+  return { file, frecency, actives, authors: editHistory };
 };
 
 const getData = (text) => {
   const lines = text.split('\n');
-  const authors = getAuthors(lines);
+  const authors = getAuthors(lines).sort();
   const fileNames = getFiles(lines);
 
   let date = null;
