@@ -9,7 +9,12 @@
   </head>
   <body>
     <div class="container" id="app">
-      <div class="upload-box">
+
+      <h2>Bus Factor Analysis 
+        <button class="btn btn-sm btn-outline-secondary" v-if="!showUpload" @click="doUpload = true">upload</button>
+      </h2>
+
+      <div class="upload-box" v-if="showUpload">
         <p>
           Upload the git log for your main branch, e.g., upload <code>~/gitlog.txt</code> after doing
         </p>
@@ -18,7 +23,7 @@
           <input class="form-control" type="file" id="logFile" @change="loadFile">
         </div>
       </div>
-      <h2>Bus Factor Analysis</h2>
+
       <table class="table" v-if="data.files.length > 0">
         <thead>
           <th>File</th>
@@ -51,10 +56,16 @@
       const app = createApp({
         data() {
           return {
+            doUpload: false,
             data: {
               files: [],
               authors: []
             }
+          }
+        },
+        computed: {
+          showUpload() {
+            return this.doUpload || this.data.files.length === 0;
           }
         },
         methods: {
@@ -62,6 +73,7 @@
             loadFile(evt.target.files[0], (text) => {
               this.data = getData(text);
               evt.target.blur();
+              this.doUpload = false;
             })
           },
           pathPart(filename) {
