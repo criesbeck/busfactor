@@ -35,8 +35,7 @@
               <small>{{pathPart(entry.file)}}</small>
               <div>{{filePart(entry.file)}}</div>
               <small>
-                Edits: {{entryEdits(entry)}}<br>
-                {{entryLastEdit(entry)}}
+                Edits: {{entryEdits(entry)}}
               </small>
             </td>
             <td v-for="author in data.authors" :class="{ low: !isActiveContributor(entry, author) }">
