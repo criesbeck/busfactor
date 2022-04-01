@@ -21,11 +21,15 @@ Activity is calculated based on the number and recency of edits.
 The columns of the table list the developers who have contributed to the repository. The cells
 show what percentage each developer contributed to the activity on each file.
 
+![Example contributions](./images/bus-factor-1.png)
+
 Developers who have contributed less than 5% to a file are highlighted. 
 These developers should be first in line for future work on those files.
 
 Files with only one or two contributors over 5% are bus factor risks and are highlighted. 
-Future work on that file should include other team members. 
+Future work on that file should include other team members.
+
+![Example bus factor](./images/bus-factor-2.png)
 
 # Customization
 
