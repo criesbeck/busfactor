@@ -85,9 +85,7 @@ const getData = (text) => {
   lines.forEach(line => {
     if (isDateLine(line)) {
       date = getDate(line);
-      if (!latest) {
-        latest = Date.parse(date);
-      }
+      latest ??= Date.parse(date);
       decayedValue = decay(latest, Date.parse(date));
     } else if (isAuthorLine(line)) {
       author = getAuthor(line);
