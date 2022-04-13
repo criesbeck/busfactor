@@ -29,12 +29,12 @@ example, the column **3/6/2022** has the commits for each team member for the we
 that ended on March 6, 2022. 
 
 Commits are not a measure of work or value. Some commits are trivial, some are major.
-But a team should always be concerned when there are team members with less then two commits
+But a team should always be concerned when there are team members with fewer than two commits
 in a week.
 
 ## Bus factor
 
-The second table identifies potential bus factor issues, in the form of active files
+The second table identifies potential bus factor issues, meaning active files
 that only one or two team members have worked on. This table has a row for each code file. Code
 file here means a JavaScript, CSS, HTML, or YAML file. The most active files are listed first.
 Activity is calculated based on the number and recency of edits. 
