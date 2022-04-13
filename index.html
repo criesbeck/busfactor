@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Bus Factor Analyzer</title>
+    <title>Commit Log Analyzer</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -9,103 +9,43 @@
   </head>
   <body>
     <div class="container" id="app">
-
-      <h2>Bus Factor Analyzer 
-        <button class="btn btn-sm btn-outline-secondary" v-if="!showUpload" @click="doUpload = true">upload</button>
-      </h2>
-
-      <div class="upload-box" v-if="showUpload">
-        <p>
-          Upload the git log for your main branch, e.g., upload <code>~/gitlog.txt</code> after doing
-        </p>
-        <pre><code>git log --no-merges --name-status main > ~/gitlog.txt</code></pre>
-        <div class="mb-3">
-          <input class="form-control" type="file" id="logFile" @change="loadFile">
-        </div>
-      </div>
-
-      <table class="table" v-if="data.files.length > 0">
-        <thead>
-          <th>File</th>
-          <th v-for="author in data.authors">{{author}}</th>
-        </thead>
-        <tbody>
-          <tr v-for="entry in data.files">
-            <td :class="{ risky: entry.actives < 3 }">
-              <small>{{pathPart(entry.file)}}</small>
-              <div>{{filePart(entry.file)}}</div>
-              <small>
-                Edits: {{entryEdits(entry)}}
-              </small>
-            </td>
-            <td v-for="author in data.authors" :class="{ low: !isActiveContributor(entry, author) }">
-              <div>{{authorContribution(entry, author)}}%</div>
-              <small>Edits: {{entry.authors[author].edits.length}}</small>
-              <small> {{shortDate(entry.authors[author].edits[0])}}</small>
-            </td>
-          </tr>
-        </tbody>
-      </table>
     </div>
     
     <script type="module">
-      import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.prod.js';
-      import { getData, isActiveContributor, loadFile } from './app.js';
+      import { createApp, defineAsyncComponent } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.prod.js';
+      import { getData, loadFile } from './app.js';
+
+      const template = `<div>
+        <Upload :empty="data.files.length === 0" :load="loadData" />
+
+        <Gitstats :weeks="data.weeks" :authors="data.authors" :commits="data.commits" />
+
+        <BusFactor :files="data.files" :authors="data.authors" />
+      </div>`;
 
       const app = createApp({
         data() {
           return {
-            doUpload: false,
             data: {
               files: [],
-              authors: []
+              authors: [],
+              weeks: [],
+              commits: {}
             }
           }
         },
-        computed: {
-          showUpload() {
-            return this.doUpload || this.data.files.length === 0;
-          }
+        components: {
+            'BusFactor': defineAsyncComponent(() => import('./bus-factor.js')),
+            'Gitstats': defineAsyncComponent(() => import('./gitstats.js')),
+            'Upload': defineAsyncComponent(() => import('./upload.js'))
         },
+        template,
         methods: {
-          loadFile(evt) {
+          loadData(evt) {
             loadFile(evt.target.files[0], (text) => {
               this.data = getData(text);
               evt.target.blur();
-              this.doUpload = false;
             })
-          },
-          pathPart(filename) {
-            const n = filename.lastIndexOf('/');
-            return n === -1 ? '' : filename.slice(0, n + 1);
-          },
-          filePart(filename) {
-            const n = filename.lastIndexOf('/');
-            return n === -1 ? filename : filename.slice(n + 1);
-          },
-          shortDate(date) {
-            return date ? new Date(date).toLocaleDateString() : '--'
-          },
-          entryEdits(entry) {
-            return Object.values(entry.authors).reduce((sum, author) => sum + author.edits.length, 0);
-          },
-          entryLastEdit(entry) {
-            const val = (date) => date ? Date.parse(date) : 0;
-            return this.shortDate(Object.values(entry.authors).map(x => x.edits[0]).sort((date1, date2) => (
-              val(date2) - val(date1)
-            ))[0]);
-          },
-          authorEdits(file, author) {
-            return this.data.history[file].authors[author].edits.length;
-          },
-          authorLastEdit(file, author) {
-            return this.shortDate(this.data.history[file].authors[author].edits[0]);
-          },
-          authorContribution(fileEntry, author) {
-            return Math.ceil(fileEntry.authors[author].frecency/fileEntry.frecency*100);
-          },
-          isActiveContributor(fileEntry, author) {
-            return isActiveContributor(fileEntry.frecency, fileEntry.authors[author]);
           }
         }
       })
