@@ -1,5 +1,5 @@
-This is a web tool to identify potential bus factor issues for small
-cross-functional teams with 5 to 10 members. It uses the output of
+This is a web tool to identify potential team and bus factor issues for small
+cross-functional teams with 5 to 10 members. It analyzes the output of
 **git log** run on a local repository.
 
 # Usage
@@ -14,7 +14,28 @@ git log --no-merges --name-status main > ~/gitlog.txt
 Upload the file to https://criesbeck.github.io/busfactor/ or serve **index.html** locally
 and use that. Nothing is stored on any server.
 
-After uploading, the app displays a table with a row for each code file. Code
+# Output
+
+After uploading, the app displays two tables. 
+
+## Commits
+
+The first table is a summary of commits
+per week by each team member since the start of the project. This is comparable to
+the **Contributors** section of the **Insight**
+page of the repo on Github, except that delete commits are not counted, and 
+the dates are the end of each week. For
+example, the column **3/6/2022** has the commits for each team member for the week
+that ended on March 6, 2022. 
+
+Commits are not a measure of work or value. Some commits are trivial, some are major.
+But a team should always be concerned when there are team members with less then two commits
+in a week.
+
+## Bus factor
+
+The second table identifies potential bus factor issues, in the form of active files
+that only one or two team members have worked on. This table has a row for each code file. Code
 file here means a JavaScript, CSS, HTML, or YAML file. The most active files are listed first.
 Activity is calculated based on the number and recency of edits. 
 
