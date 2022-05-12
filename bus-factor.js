@@ -2,6 +2,10 @@ import { isActiveContributor } from "./app.js";
 
 const template = `<div v-if="files.length > 0">
   <h1>Bus Factor Analysis</h1>
+  <p>
+    Files in pink near the top need more contributors. Developers in yellow
+    for specific files could use experience editing those files.
+  </p> 
   <table class="table">
     <thead>
       <th>File</th>

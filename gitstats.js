@@ -2,6 +2,9 @@ import { countCommits } from "./app.js";
 
 const template = `<div v-if="authors.length > 0">
   <h1>Gitstats</h1>
+  <p>
+    Zeros and ones suggest an underlying obstacle to participation. Investigate!
+  </p> 
   <table class="table">
     <thead>
       <th>Name</th>
