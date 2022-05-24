@@ -61,11 +61,12 @@ const getNextSunday = (ts) => {
   return new Date(date).toLocaleDateString();
 };
 
+// returns how many timestamps occurred in the week before a given Sunday 
 export const countCommits = (timestamps, sunday) => (
   count(timestamps, ts => sunday === getNextSunday(ts))
 );
 
-// add aggregate data:
+// return aggregate data for file activity
 //  - total edits, last edit, total frecency, number of serious contributors
 const makeFileEntry = (file, editHistory) => {
   const frecency = fileFrecency(editHistory);
@@ -74,7 +75,7 @@ const makeFileEntry = (file, editHistory) => {
 };
 
 const getData = (text) => {
-  const lines = text.split('\n');
+  const lines = text.split(/\n|\r/);
   const authors = getAuthors(lines).sort();
   const fileNames = getFiles(lines);
   const weekSet = new Set();
