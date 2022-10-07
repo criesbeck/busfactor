@@ -14,6 +14,9 @@ const template = `<h2>Commit Log Analyzer
   <div class="mb-3">
     <input class="form-control" type="file" id="logFile" @change="load">
   </div>
+  <p>
+    For more about this tool, see <a href="https://github.com/criesbeck/busfactor" target="_blank">the README</a>.
+  </p>
   </div>`;
 
 export default {
