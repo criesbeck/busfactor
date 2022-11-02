@@ -1,8 +1,11 @@
 'use strict';
 
 // Which files and actions to track
-// This says to only track Add, Change, Modify to JavaScript, HTML, CSS, and YAML files
+// Only track Add, Change, Modify to JavaScript, HTML, CSS, and YAML files
 const EDIT_PAT = /^[ACM]\s+(.*[.](?:js|jsx|ts|tsx|css|html?|yml))$/;
+
+// Ignore anything in node_modules, dist, or build
+const IGNORE_PAT = /\s(?:node_modules|build|dist[/])/;
 
 // What threshold for being an active contributor. Range: 0 to 1.
 // This says 5%
@@ -29,9 +32,9 @@ const DATE_PAT = /^Date:\s+(.+)$/;
 const isDateLine = (line) => DATE_PAT.test(line);
 const getDate = (line) => DATE_PAT.exec(line)[1];
 
-const isCodeFileLine =(line) => EDIT_PAT.test(line);
-const getFile = (line) => EDIT_PAT.exec(line)[1];
+const isCodeFileLine = (line) => EDIT_PAT.test(line) && !IGNORE_PAT.test(line);
 
+const getFile = (line) => EDIT_PAT.exec(line)[1];
 
 const getAuthors =(lines) => (
   Array.from(new Set(lines.filter(x => isAuthorLine(x)).map(x => getAuthor(x))))
